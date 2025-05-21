@@ -1,0 +1,761 @@
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (2.3ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" varchar NOT NULL PRIMARY KEY)[0m
+  [1m[35m (1.7ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" varchar NOT NULL PRIMARY KEY, "value" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to DeviseCreateUsers (20250521182413)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.3ms)[0m  [1m[35mCREATE TABLE "users" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "email" varchar DEFAULT '' NOT NULL, "encrypted_password" varchar DEFAULT '' NOT NULL, "reset_password_token" varchar, "reset_password_sent_at" datetime, "remember_created_at" datetime, "name" varchar, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_email" ON "users" ("email")[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE UNIQUE INDEX "index_users_on_reset_password_token" ON "users" ("reset_password_token")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20250521182413"]]
+  [1m[35m (1.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["key", "environment"], ["value", "development"], ["created_at", "2025-05-21 18:24:14.717658"], ["updated_at", "2025-05-21 18:24:14.717658"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Migrating to CreatePrograms (20250521182421)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT sqlite_version(*)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "programs" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "duration" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20250521182421"]]
+  [1m[35m (7.1ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateActivities (20250521182422)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "activities" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "description" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL)[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20250521182422"]]
+  [1m[35m (1.7ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateDailyPlans (20250521182423)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.2ms)[0m  [1m[35mCREATE TABLE "daily_plans" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "day" integer, "program_id" integer, "activity_id" integer, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_470e9a5989"
+FOREIGN KEY ("program_id")
+  REFERENCES "programs" ("id")
+, CONSTRAINT "fk_rails_b179a8f179"
+FOREIGN KEY ("activity_id")
+  REFERENCES "activities" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_daily_plans_on_program_id" ON "daily_plans" ("program_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_daily_plans_on_program_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_daily_plans_on_program_id' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE  INDEX "index_daily_plans_on_activity_id" ON "daily_plans" ("activity_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20250521182423"]]
+  [1m[35m (1.5ms)[0m  [1m[36mcommit transaction[0m
+Migrating to CreateUserActivityCompletions (20250521182424)
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE TABLE "user_activity_completions" ("id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, "user_id" integer, "daily_plan_id" integer, "completed_at" datetime, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, CONSTRAINT "fk_rails_85e5cd7e35"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_b51ec14a6f"
+FOREIGN KEY ("daily_plan_id")
+  REFERENCES "daily_plans" ("id")
+)[0m
+  [1m[35m (0.1ms)[0m  [1m[35mCREATE  INDEX "index_user_activity_completions_on_user_id" ON "user_activity_completions" ("user_id")[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_user_activity_completions_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_user_activity_completions_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[35mCREATE  INDEX "index_user_activity_completions_on_daily_plan_id" ON "user_activity_completions" ("daily_plan_id")[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES (?)[0m  [["version", "20250521182424"]]
+  [1m[35m (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[36mActiveRecord::InternalMetadata Load (0.1ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = ? LIMIT ?[0m  [["key", "environment"], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_daily_plans_on_activity_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_daily_plans_on_activity_id' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_daily_plans_on_program_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_daily_plans_on_program_id' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_user_activity_completions_on_daily_plan_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_user_activity_completions_on_daily_plan_id' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_user_activity_completions_on_user_id' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_user_activity_completions_on_user_id' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[34m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "programs" ("title", "duration", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["title", "Prodigy Program"], ["duration", 30], ["created_at", "2025-05-21 18:24:40.505831"], ["updated_at", "2025-05-21 18:24:40.505831"]]
+  [1m[35m (2.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "activities" ("title", "description", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["title", "Meditation"], ["description", "5 min"], ["created_at", "2025-05-21 18:24:40.656705"], ["updated_at", "2025-05-21 18:24:40.656705"]]
+  [1m[35m (7.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "activities" ("title", "description", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["title", "Journaling"], ["description", "Write thoughts"], ["created_at", "2025-05-21 18:24:40.763198"], ["updated_at", "2025-05-21 18:24:40.763198"]]
+  [1m[35m (2.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "activities" ("title", "description", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["title", "Breathing"], ["description", "Deep breathing"], ["created_at", "2025-05-21 18:24:40.849964"], ["updated_at", "2025-05-21 18:24:40.849964"]]
+  [1m[35m (3.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 1], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.136959"], ["updated_at", "2025-05-21 18:24:41.136959"]]
+  [1m[35m (2.0ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 1], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.139882"], ["updated_at", "2025-05-21 18:24:41.139882"]]
+  [1m[35m (1.8ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 1], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.142441"], ["updated_at", "2025-05-21 18:24:41.142441"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 2], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.144416"], ["updated_at", "2025-05-21 18:24:41.144416"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 2], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.146364"], ["updated_at", "2025-05-21 18:24:41.146364"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 2], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.148239"], ["updated_at", "2025-05-21 18:24:41.148239"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 3], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.150107"], ["updated_at", "2025-05-21 18:24:41.150107"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 3], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.151950"], ["updated_at", "2025-05-21 18:24:41.151950"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 3], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.153868"], ["updated_at", "2025-05-21 18:24:41.153868"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 4], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.155805"], ["updated_at", "2025-05-21 18:24:41.155805"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 4], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.157851"], ["updated_at", "2025-05-21 18:24:41.157851"]]
+  [1m[35m (1.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 4], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.160532"], ["updated_at", "2025-05-21 18:24:41.160532"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 5], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.162543"], ["updated_at", "2025-05-21 18:24:41.162543"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 5], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.164519"], ["updated_at", "2025-05-21 18:24:41.164519"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 5], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.166364"], ["updated_at", "2025-05-21 18:24:41.166364"]]
+  [1m[35m (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 6], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.168473"], ["updated_at", "2025-05-21 18:24:41.168473"]]
+  [1m[35m (2.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 6], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.171301"], ["updated_at", "2025-05-21 18:24:41.171301"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 6], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.173031"], ["updated_at", "2025-05-21 18:24:41.173031"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 7], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.174820"], ["updated_at", "2025-05-21 18:24:41.174820"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 7], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.176664"], ["updated_at", "2025-05-21 18:24:41.176664"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 7], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.178466"], ["updated_at", "2025-05-21 18:24:41.178466"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 8], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.180238"], ["updated_at", "2025-05-21 18:24:41.180238"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 8], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.182064"], ["updated_at", "2025-05-21 18:24:41.182064"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 8], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.183905"], ["updated_at", "2025-05-21 18:24:41.183905"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 9], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.185799"], ["updated_at", "2025-05-21 18:24:41.185799"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 9], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.187617"], ["updated_at", "2025-05-21 18:24:41.187617"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 9], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.189868"], ["updated_at", "2025-05-21 18:24:41.189868"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 10], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.192037"], ["updated_at", "2025-05-21 18:24:41.192037"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 10], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.194212"], ["updated_at", "2025-05-21 18:24:41.194212"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 10], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.196192"], ["updated_at", "2025-05-21 18:24:41.196192"]]
+  [1m[35m (2.7ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 11], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.199651"], ["updated_at", "2025-05-21 18:24:41.199651"]]
+  [1m[35m (2.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 11], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.202613"], ["updated_at", "2025-05-21 18:24:41.202613"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 11], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.204438"], ["updated_at", "2025-05-21 18:24:41.204438"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 12], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.206226"], ["updated_at", "2025-05-21 18:24:41.206226"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 12], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.207993"], ["updated_at", "2025-05-21 18:24:41.207993"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 12], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.209794"], ["updated_at", "2025-05-21 18:24:41.209794"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 13], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.211600"], ["updated_at", "2025-05-21 18:24:41.211600"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 13], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.213406"], ["updated_at", "2025-05-21 18:24:41.213406"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 13], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.215150"], ["updated_at", "2025-05-21 18:24:41.215150"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 14], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.216879"], ["updated_at", "2025-05-21 18:24:41.216879"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 14], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.218704"], ["updated_at", "2025-05-21 18:24:41.218704"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 14], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.220883"], ["updated_at", "2025-05-21 18:24:41.220883"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 15], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.222894"], ["updated_at", "2025-05-21 18:24:41.222894"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 15], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.224814"], ["updated_at", "2025-05-21 18:24:41.224814"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 15], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.226990"], ["updated_at", "2025-05-21 18:24:41.226990"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 16], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.228900"], ["updated_at", "2025-05-21 18:24:41.228900"]]
+  [1m[35m (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 16], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.231140"], ["updated_at", "2025-05-21 18:24:41.231140"]]
+  [1m[35m (2.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 16], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.235385"], ["updated_at", "2025-05-21 18:24:41.235385"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 17], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.237257"], ["updated_at", "2025-05-21 18:24:41.237257"]]
+  [1m[35m (1.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 17], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.238990"], ["updated_at", "2025-05-21 18:24:41.238990"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 17], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.240727"], ["updated_at", "2025-05-21 18:24:41.240727"]]
+  [1m[35m (1.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 18], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.242502"], ["updated_at", "2025-05-21 18:24:41.242502"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 18], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.244344"], ["updated_at", "2025-05-21 18:24:41.244344"]]
+  [1m[35m (1.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 18], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.246139"], ["updated_at", "2025-05-21 18:24:41.246139"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 19], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.248019"], ["updated_at", "2025-05-21 18:24:41.248019"]]
+  [1m[35m (1.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 19], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.249864"], ["updated_at", "2025-05-21 18:24:41.249864"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 19], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.252252"], ["updated_at", "2025-05-21 18:24:41.252252"]]
+  [1m[35m (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 20], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.255190"], ["updated_at", "2025-05-21 18:24:41.255190"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 20], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.257359"], ["updated_at", "2025-05-21 18:24:41.257359"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 20], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.259387"], ["updated_at", "2025-05-21 18:24:41.259387"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 21], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.261287"], ["updated_at", "2025-05-21 18:24:41.261287"]]
+  [1m[35m (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 21], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.263693"], ["updated_at", "2025-05-21 18:24:41.263693"]]
+  [1m[35m (2.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 21], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.266780"], ["updated_at", "2025-05-21 18:24:41.266780"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 22], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.268853"], ["updated_at", "2025-05-21 18:24:41.268853"]]
+  [1m[35m (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 22], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.271198"], ["updated_at", "2025-05-21 18:24:41.271198"]]
+  [1m[35m (1.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 22], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.273038"], ["updated_at", "2025-05-21 18:24:41.273038"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 23], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.274968"], ["updated_at", "2025-05-21 18:24:41.274968"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 23], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.276742"], ["updated_at", "2025-05-21 18:24:41.276742"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 23], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.278630"], ["updated_at", "2025-05-21 18:24:41.278630"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 24], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.280490"], ["updated_at", "2025-05-21 18:24:41.280490"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 24], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.282667"], ["updated_at", "2025-05-21 18:24:41.282667"]]
+  [1m[35m (1.5ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 24], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.285286"], ["updated_at", "2025-05-21 18:24:41.285286"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 25], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.287400"], ["updated_at", "2025-05-21 18:24:41.287400"]]
+  [1m[35m (1.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 25], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.289180"], ["updated_at", "2025-05-21 18:24:41.289180"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 25], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.291067"], ["updated_at", "2025-05-21 18:24:41.291067"]]
+  [1m[35m (1.9ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 26], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.293561"], ["updated_at", "2025-05-21 18:24:41.293561"]]
+  [1m[35m (1.6ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 26], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.295795"], ["updated_at", "2025-05-21 18:24:41.295795"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 26], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.297635"], ["updated_at", "2025-05-21 18:24:41.297635"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 27], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.299519"], ["updated_at", "2025-05-21 18:24:41.299519"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 27], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.301346"], ["updated_at", "2025-05-21 18:24:41.301346"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 27], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.303230"], ["updated_at", "2025-05-21 18:24:41.303230"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 28], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.305052"], ["updated_at", "2025-05-21 18:24:41.305052"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 28], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.307028"], ["updated_at", "2025-05-21 18:24:41.307028"]]
+  [1m[35m (1.1ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 28], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.308763"], ["updated_at", "2025-05-21 18:24:41.308763"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 29], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.310645"], ["updated_at", "2025-05-21 18:24:41.310645"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 29], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.312416"], ["updated_at", "2025-05-21 18:24:41.312416"]]
+  [1m[35m (1.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 29], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.314287"], ["updated_at", "2025-05-21 18:24:41.314287"]]
+  [1m[35m (1.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 30], ["program_id", 1], ["activity_id", 1], ["created_at", "2025-05-21 18:24:41.316504"], ["updated_at", "2025-05-21 18:24:41.316504"]]
+  [1m[35m (1.3ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 30], ["program_id", 1], ["activity_id", 2], ["created_at", "2025-05-21 18:24:41.318714"], ["updated_at", "2025-05-21 18:24:41.318714"]]
+  [1m[35m (2.4ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[32mINSERT INTO "daily_plans" ("day", "program_id", "activity_id", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["day", 30], ["program_id", 1], ["activity_id", 3], ["created_at", "2025-05-21 18:24:41.321836"], ["updated_at", "2025-05-21 18:24:41.321836"]]
+  [1m[35m (1.4ms)[0m  [1m[36mcommit transaction[0m
+Started POST "/users" for ::1 at 2025-05-21 23:58:08 +0530
+  [1m[35m (0.1ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by Devise::RegistrationsController#create as */*
+  Parameters: {"registration"=>{}}
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+Completed 200 OK in 10ms (Views: 0.1ms | ActiveRecord: 0.3ms)
+
+
+Started POST "/users" for ::1 at 2025-05-22 00:04:42 +0530
+Processing by Devise::RegistrationsController#create as */*
+  Parameters: {"registration"=>{}}
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+Completed 200 OK in 6ms (Views: 0.0ms | ActiveRecord: 0.5ms)
+
+
+Started POST "/users" for ::1 at 2025-05-22 00:04:43 +0530
+Processing by Devise::RegistrationsController#create as */*
+  Parameters: {"registration"=>{}}
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+Completed 200 OK in 1ms (Views: 0.0ms | ActiveRecord: 0.1ms)
+
+
+Started POST "/users" for ::1 at 2025-05-22 00:07:01 +0530
+Processing by Devise::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "name"=>"Tester"}, "registration"=>{"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "name"=>"Tester"}}}
+Unpermitted parameter: :name
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "users" ("email", "encrypted_password", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["email", "test@example.com"], ["encrypted_password", "$2a$12$v1qRNwsr8wCbydQSmOSmA.oiMldAwXAbZZL0vCzrrHuJadewRKWRO"], ["created_at", "2025-05-21 18:37:01.247919"], ["updated_at", "2025-05-21 18:37:01.247919"]]
+  [1m[35m (1.9ms)[0m  [1m[36mcommit transaction[0m
+Completed 200 OK in 221ms (Views: 0.1ms | ActiveRecord: 2.3ms)
+
+
+Started POST "/users/sign_in" for ::1 at 2025-05-22 00:08:50 +0530
+Processing by Devise::SessionsController#create as */*
+Completed 401 Unauthorized in 0ms
+
+
+Processing by Devise::SessionsController#new as */*
+Completed 200 OK in 4ms (Views: 0.0ms | ActiveRecord: 0.4ms)
+
+
+Started POST "/users/sign_in" for ::1 at 2025-05-22 00:09:15 +0530
+Processing by Devise::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.2ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+Completed 200 OK in 208ms (Views: 0.1ms | ActiveRecord: 0.2ms)
+
+
+Started GET "/plans/14" for ::1 at 2025-05-22 00:09:51 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"14"}
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_in" for ::1 at 2025-05-22 00:09:51 +0530
+Processing by Devise::SessionsController#new as */*
+Completed 200 OK in 0ms (Views: 0.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/plans/14" for ::1 at 2025-05-22 00:10:04 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"14"}
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_in" for ::1 at 2025-05-22 00:10:04 +0530
+Processing by Devise::SessionsController#new as */*
+Completed 200 OK in 0ms (Views: 0.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/plans/14" for ::1 at 2025-05-22 00:13:27 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"14"}
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_in" for ::1 at 2025-05-22 00:13:27 +0530
+Processing by Devise::SessionsController#new as */*
+Completed 200 OK in 0ms (Views: 0.0ms | ActiveRecord: 0.0ms)
+
+
+Started GET "/plans/14" for ::1 at 2025-05-22 00:13:57 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"14"}
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ?[0m  [["day", 14]]
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."id" IN (1, 2, 3)[0m
+  [1m[36mUserActivityCompletion Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 40 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 41 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 42 LIMIT ?[0m  [["LIMIT", 1]]
+Completed 200 OK in 21ms (Views: 0.2ms | ActiveRecord: 1.0ms)
+
+
+Started GET "/plans/14/activities/2/complete" for ::1 at 2025-05-22 00:14:31 +0530
+  
+ActionController::RoutingError (No route matches [GET] "/plans/14/activities/2/complete"):
+  
+actionpack (5.1.7) lib/action_dispatch/middleware/debug_exceptions.rb:63:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (5.1.7) lib/rails/rack/logger.rb:36:in `call_app'
+railties (5.1.7) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (5.1.7) lib/active_support/tagged_logging.rb:69:in `block in tagged'
+activesupport (5.1.7) lib/active_support/tagged_logging.rb:26:in `tagged'
+activesupport (5.1.7) lib/active_support/tagged_logging.rb:69:in `tagged'
+railties (5.1.7) lib/rails/rack/logger.rb:24:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/remote_ip.rb:79:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/request_id.rb:25:in `call'
+rack (2.2.15) lib/rack/runtime.rb:22:in `call'
+activesupport (5.1.7) lib/active_support/cache/strategy/local_cache_middleware.rb:27:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/executor.rb:12:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/static.rb:125:in `call'
+rack (2.2.15) lib/rack/sendfile.rb:110:in `call'
+railties (5.1.7) lib/rails/engine.rb:522:in `call'
+puma (3.12.6) lib/puma/configuration.rb:227:in `call'
+puma (3.12.6) lib/puma/server.rb:706:in `handle_request'
+puma (3.12.6) lib/puma/server.rb:476:in `process_client'
+puma (3.12.6) lib/puma/server.rb:334:in `block in run'
+puma (3.12.6) lib/puma/thread_pool.rb:135:in `block in spawn_thread'
+Started GET "/plans/14" for ::1 at 2025-05-22 00:18:01 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"14"}
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ?[0m  [["day", 14]]
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."id" IN (1, 2, 3)[0m
+  [1m[36mUserActivityCompletion Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 40 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 41 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 42 LIMIT ?[0m  [["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/plans/15" for ::1 at 2025-05-22 00:18:39 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"15"}
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ?[0m  [["day", 15]]
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."id" IN (1, 2, 3)[0m
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 43 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 44 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 45 LIMIT ?[0m  [["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.3ms)
+
+
+Started GET "/plans/255" for ::1 at 2025-05-22 00:18:50 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"255"}
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ?[0m  [["day", 255]]
+Completed 200 OK in 1ms (Views: 0.1ms | ActiveRecord: 0.1ms)
+
+
+Started GET "/plans/20" for ::1 at 2025-05-22 00:19:20 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"20"}
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ?[0m  [["day", 20]]
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."id" IN (1, 2, 3)[0m
+  [1m[36mUserActivityCompletion Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 58 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 59 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 60 LIMIT ?[0m  [["LIMIT", 1]]
+Completed 200 OK in 2ms (Views: 0.1ms | ActiveRecord: 0.4ms)
+
+
+Started GET "/plans/activities/42/complete?day=5" for ::1 at 2025-05-22 00:27:32 +0530
+  
+ActionController::RoutingError (No route matches [GET] "/plans/activities/42/complete"):
+  
+actionpack (5.1.7) lib/action_dispatch/middleware/debug_exceptions.rb:63:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/show_exceptions.rb:31:in `call'
+railties (5.1.7) lib/rails/rack/logger.rb:36:in `call_app'
+railties (5.1.7) lib/rails/rack/logger.rb:24:in `block in call'
+activesupport (5.1.7) lib/active_support/tagged_logging.rb:69:in `block in tagged'
+activesupport (5.1.7) lib/active_support/tagged_logging.rb:26:in `tagged'
+activesupport (5.1.7) lib/active_support/tagged_logging.rb:69:in `tagged'
+railties (5.1.7) lib/rails/rack/logger.rb:24:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/remote_ip.rb:79:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/request_id.rb:25:in `call'
+rack (2.2.15) lib/rack/runtime.rb:22:in `call'
+activesupport (5.1.7) lib/active_support/cache/strategy/local_cache_middleware.rb:27:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/executor.rb:12:in `call'
+actionpack (5.1.7) lib/action_dispatch/middleware/static.rb:125:in `call'
+rack (2.2.15) lib/rack/sendfile.rb:110:in `call'
+railties (5.1.7) lib/rails/engine.rb:522:in `call'
+puma (3.12.6) lib/puma/configuration.rb:227:in `call'
+puma (3.12.6) lib/puma/server.rb:706:in `handle_request'
+puma (3.12.6) lib/puma/server.rb:476:in `process_client'
+puma (3.12.6) lib/puma/server.rb:334:in `block in run'
+puma (3.12.6) lib/puma/thread_pool.rb:135:in `block in spawn_thread'
+Started POST "/plans/activities/42/complete?day=5" for ::1 at 2025-05-22 00:28:02 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"5", "activity_id"=>"42"}
+  [1m[36mDailyPlan Load (0.2ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ? AND "daily_plans"."activity_id" = ? LIMIT ?[0m  [["day", 0], ["activity_id", 42], ["LIMIT", 1]]
+Completed 404 Not Found in 10ms (Views: 0.1ms | ActiveRecord: 0.6ms)
+
+
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" ORDER BY "daily_plans"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+Started POST "/plans/activities/3/complete?day=30" for ::1 at 2025-05-22 00:29:11 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"30", "activity_id"=>"3"}
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ? AND "daily_plans"."activity_id" = ? LIMIT ?[0m  [["day", 0], ["activity_id", 3], ["LIMIT", 1]]
+Completed 404 Not Found in 0ms (Views: 0.1ms | ActiveRecord: 0.1ms)
+
+
+Started POST "/plans/activities/3/complete?day=30" for ::1 at 2025-05-22 00:29:43 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"30", "activity_id"=>"3"}
+Completed 500 Internal Server Error in 1ms
+
+
+  
+NoMethodError (undefined method `pry' for #<Binding:0x00007fce08560300>
+Did you mean?  try):
+  
+app/controllers/plans_controller.rb:25:in `complete_activity'
+Started POST "/plans/activities/3/complete?day=30" for ::1 at 2025-05-22 00:29:55 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"30", "activity_id"=>"3"}
+  [1m[36mDailyPlan Load (0.2ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" ORDER BY "daily_plans"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mDailyPlan Load (0.3ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ? AND "daily_plans"."activity_id" = ? LIMIT ?[0m  [["day", 0], ["activity_id", 3], ["LIMIT", 1]]
+  [1m[36mCACHE DailyPlan Load (0.0ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ? AND "daily_plans"."activity_id" = ? LIMIT ?[0m  [["day", 0], ["activity_id", 3], ["LIMIT", 1]]
+  [1m[36mCACHE DailyPlan Load (0.0ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ? AND "daily_plans"."activity_id" = ? LIMIT ?[0m  [["day", 0], ["activity_id", 3], ["LIMIT", 1]]
+Completed 404 Not Found in 66871ms (Views: 0.2ms | ActiveRecord: 1.8ms)
+
+
+Started POST "/plans/activities/3/complete?day=30" for ::1 at 2025-05-22 00:31:05 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"30", "activity_id"=>"3"}
+  [1m[36mDailyPlan Load (0.2ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ? AND "daily_plans"."activity_id" = ? LIMIT ?[0m  [["day", 30], ["activity_id", 3], ["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Load (0.1ms)[0m  [1m[34mSELECT  "user_activity_completions".* FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 90 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+Completed 422 Unprocessable Entity in 1461ms (ActiveRecord: 1.9ms)
+
+
+  
+ActiveRecord::RecordInvalid (Validation failed: User must exist):
+  
+app/controllers/plans_controller.rb:30:in `complete_activity'
+Started POST "/plans/activities/3/complete?day=30" for ::1 at 2025-05-22 00:31:49 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"30", "activity_id"=>"3"}
+Completed 401 Unauthorized in 1ms
+
+
+Started GET "/users/sign_in" for ::1 at 2025-05-22 00:31:49 +0530
+Processing by Devise::SessionsController#new as */*
+Completed 200 OK in 5ms (Views: 0.1ms | ActiveRecord: 0.5ms)
+
+
+Started POST "/users" for ::1 at 2025-05-22 00:36:56 +0530
+Processing by Devise::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "name"=>"Tester"}, "registration"=>{"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "name"=>"Tester"}}}
+Unpermitted parameter: :name
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+Completed 200 OK in 203ms (Views: 0.0ms | ActiveRecord: 0.2ms)
+
+
+Started POST "/users" for ::1 at 2025-05-22 00:37:13 +0530
+Processing by Devise::RegistrationsController#create as */*
+  Parameters: {"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "name"=>"Tester"}, "registration"=>{"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]", "name"=>"Tester"}}}
+Unpermitted parameter: :name
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[36mUser Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "users" WHERE "users"."email" = ? LIMIT ?[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[31mrollback transaction[0m
+Completed 200 OK in 201ms (Views: 0.0ms | ActiveRecord: 0.2ms)
+
+
+Started POST "/users/sign_in" for ::1 at 2025-05-22 00:37:18 +0530
+Processing by Devise::SessionsController#create as */*
+  Parameters: {"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]"}}}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" WHERE "users"."email" = ? ORDER BY "users"."id" ASC LIMIT ?[0m  [["email", "test@example.com"], ["LIMIT", 1]]
+Completed 200 OK in 200ms (Views: 0.1ms | ActiveRecord: 0.1ms)
+
+
+Started POST "/plans/activities/3/complete?day=30" for ::1 at 2025-05-22 00:37:58 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"30", "activity_id"=>"3"}
+Completed 401 Unauthorized in 0ms (ActiveRecord: 0.0ms)
+
+
+Started GET "/users/sign_in" for ::1 at 2025-05-22 00:37:58 +0530
+Processing by Devise::SessionsController#new as */*
+Completed 200 OK in 0ms (Views: 0.0ms | ActiveRecord: 0.0ms)
+
+
+Started POST "/plans/activities/3/complete?day=30" for ::1 at 2025-05-22 00:38:20 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"30", "activity_id"=>"3"}
+Completed 401 Unauthorized in 1ms
+
+
+Started GET "/users/sign_in" for ::1 at 2025-05-22 00:38:20 +0530
+Processing by Devise::SessionsController#new as */*
+Completed 200 OK in 4ms (Views: 0.0ms | ActiveRecord: 0.4ms)
+
+
+Started POST "/plans/activities/3/complete?day=30" for ::1 at 2025-05-22 00:38:41 +0530
+Processing by PlansController#complete_activity as */*
+  Parameters: {"day"=>"30", "activity_id"=>"3"}
+  [1m[36mUser Load (0.1ms)[0m  [1m[34mSELECT  "users".* FROM "users" ORDER BY "users"."id" DESC LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT  "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ? AND "daily_plans"."activity_id" = ? LIMIT ?[0m  [["day", 30], ["activity_id", 3], ["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Load (0.1ms)[0m  [1m[34mSELECT  "user_activity_completions".* FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" = 1 AND "user_activity_completions"."daily_plan_id" = 90 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[35m (0.0ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "user_activity_completions" ("user_id", "daily_plan_id", "created_at", "updated_at") VALUES (?, ?, ?, ?)[0m  [["user_id", 1], ["daily_plan_id", 90], ["created_at", "2025-05-21 19:08:41.514339"], ["updated_at", "2025-05-21 19:08:41.514339"]]
+  [1m[35m (7.2ms)[0m  [1m[36mcommit transaction[0m
+  [1m[35m (0.1ms)[0m  [1m[36mbegin transaction[0m
+  [1m[35mSQL (0.1ms)[0m  [1m[33mUPDATE "user_activity_completions" SET "completed_at" = ?, "updated_at" = ? WHERE "user_activity_completions"."id" = ?[0m  [["completed_at", "2025-05-21 19:08:41.522835"], ["updated_at", "2025-05-21 19:08:41.523298"], ["id", 1]]
+  [1m[35m (1.5ms)[0m  [1m[36mcommit transaction[0m
+Completed 200 OK in 25ms (Views: 0.1ms | ActiveRecord: 10.1ms)
+
+
+Started GET "/plans/20" for ::1 at 2025-05-22 00:38:53 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"20"}
+  [1m[36mDailyPlan Load (0.1ms)[0m  [1m[34mSELECT "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ?[0m  [["day", 20]]
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."id" IN (1, 2, 3)[0m
+  [1m[36mUserActivityCompletion Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 58 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 59 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.0ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 60 LIMIT ?[0m  [["LIMIT", 1]]
+Completed 200 OK in 6ms (Views: 0.1ms | ActiveRecord: 0.6ms)
+
+
+Started GET "/plans/30" for ::1 at 2025-05-22 00:39:07 +0530
+Processing by PlansController#show as */*
+  Parameters: {"id"=>"30"}
+  [1m[36mDailyPlan Load (0.2ms)[0m  [1m[34mSELECT "daily_plans".* FROM "daily_plans" WHERE "daily_plans"."day" = ?[0m  [["day", 30]]
+  [1m[36mActivity Load (0.1ms)[0m  [1m[34mSELECT "activities".* FROM "activities" WHERE "activities"."id" IN (1, 2, 3)[0m
+  [1m[36mUserActivityCompletion Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 88 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 89 LIMIT ?[0m  [["LIMIT", 1]]
+  [1m[36mUserActivityCompletion Exists (0.1ms)[0m  [1m[34mSELECT  1 AS one FROM "user_activity_completions" WHERE "user_activity_completions"."user_id" IS NULL AND "user_activity_completions"."daily_plan_id" = 90 LIMIT ?[0m  [["LIMIT", 1]]
+Completed 200 OK in 4ms (Views: 0.2ms | ActiveRecord: 0.5ms)
+
+
